@@ -1,15 +1,23 @@
 class Room {
-    constructor({ name, bookings, rate, discount }) {
+    constructor({ name, booking, rate, discount }) {
         this.name = name;
-        this.bookings = bookings;
+        this.booking = booking;
         this.rate = rate;
-        this.discount = discount
-
+        this.discount = discount;
     }
-    isOccupied() {
 
+    isOccupied(date) {
+        for (let i = 0; i <= this.booking.length; i++) {
+            if (
+                date >= this.booking[i].checkin &&
+                date <= this.booking[i].checkout
+            ) {
+                return true
+            }
+            return false
+        }
     }
-    occupancyPercentage() {
+    occupancyPercentage(startDate, endDate) {
 
     }
     static totalOccupancyPercentage() {
@@ -34,3 +42,5 @@ class Booking {
 
     }
 }
+
+module.exports = { Room, Booking }
