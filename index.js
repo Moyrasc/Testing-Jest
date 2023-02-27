@@ -18,8 +18,19 @@ class Room {
         }
     }
     occupancyPercentage(startDate, endDate) {
-
+        let count = 0;
+        if (this.booking.length > 0) {
+            this.booking.forEach((booking) => {
+                if (Number(booking.checkin) >= Number(startDate) && Number(booking.checkout) <= Number(endDate)) {
+                    count++;
+                }
+            })
+        }
+        console.log((count * 100) / this.booking.length)
+        return (count * 100) / this.booking.length;
     }
+
+
     static totalOccupancyPercentage() {
 
     }

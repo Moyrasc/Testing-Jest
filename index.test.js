@@ -17,28 +17,28 @@ const bookingData = {
 }
 
 describe('rooms', () => {
-    test('Instanciar una room con nombre', () => {
+    test('Instanciate a room with name', () => {
         const testRoom = new Room({ name: roomData.name })
         expect(testRoom.name).toBe(roomData.name)
     })
-    test('Instanciar una room con booking', () => {
+    test('Instanciate a room with booking', () => {
         const testRoom = new Room({ booking: bookingData })
         expect(testRoom.booking).toBe(bookingData)
     })
-    test('Instanciar una room con rate', () => {
+    test('Instanciate a room with rate', () => {
         const testRoom = new Room({ rate: roomData.rate })
         expect(testRoom.rate).toBe(roomData.rate)
     })
-    test('Instanciar una room con discount', () => {
+    test('Instanciate a room with discount', () => {
         const testRoom = new Room({ discount: roomData.discount })
         expect(testRoom.discount).toBe(roomData.discount)
     })
-    test('Instanciar una room completa', () => {
+    test('Instanciate a room complet', () => {
         const testRoom = new Room(roomData)
         expect(testRoom).toEqual(roomData)
     })
 })
-describe.only('occupancy', () => {
+describe('occupancy', () => {
     test('room occupied', () => {
         const testRoom = new Room({ ...roomData, booking: [bookingData] })
         expect(testRoom.isOccupied('20230213')).toBeTruthy()
@@ -60,4 +60,13 @@ describe.only('occupancy', () => {
         expect(testRoom.isOccupied('20230215')).toBeFalsy()
     })
 })
-
+describe('occupancy Percentage', () => {
+    test('percentage 100', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230212', '20230214')).toBe(100)
+    })
+    test('percetage 0', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230201', '20230210')).toBe(0)
+    })
+})
