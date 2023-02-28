@@ -17,27 +17,47 @@ class Room {
             return false
         }
     }
+
     occupancyPercentage(startDate, endDate) {
+        if (endDate < startDate) return "Check out cannot be greater than check in"
         let count = 0;
-        if (this.booking.length > 0) {
-            this.booking.forEach((booking) => {
-                if (Number(booking.checkin) >= Number(startDate) && Number(booking.checkout) <= Number(endDate)) {
-                    count++;
-                }
+        let numberStartDate = +startDate
+        let numberEndDate = +endDate
+        const range = []
+        while (numberStartDate <= numberEndDate) {
+            range.push(numberStartDate)
+            numberStartDate++
+        }
+        if (range.length > 0) {
+            range.forEach((item) => {
+                if (this.isOccupied(item)) count++
             })
         }
-        console.log((count * 100) / this.booking.length)
-        return (count * 100) / this.booking.length;
+        return Math.floor((count * 100) / range.length);
     }
 
-
-    static totalOccupancyPercentage() {
-
+    static totalOccupancyPercentage(rooms, startDate, endDate) {
+        let totalOccupancy = 0
+        rooms.forEach(room => {
+            totalOccupancy += room.occupancyPercentage(startDate, endDate)
+        })
+        const totalPercentage = !isNaN(totalOccupancy) ? totalOccupancy / rooms.length : totalOccupancy
+        return totalPercentage
     }
-    static availableRooms() {
 
+    static availableRooms(rooms, startDate, endDate) {
+        if (endDate < startDate) return "Check out cannot be greater than check in"
+        const availablerooms = [];
+        rooms.forEach((room) => {
+            if (room.occupancyPercentage(startDate, endDate) === 0) {
+                availablerooms.push(room);
+            }
+        });
+        return availablerooms;
     }
+
 }
+
 
 class Booking {
     constructor({ name, email, checkin, checkout, discount, room }) {
@@ -47,11 +67,18 @@ class Booking {
         this.checkout = checkout;
         this.discount = discount;
         this.room = room
-
     }
     get fee() {
+        // const roomprice = this.room.rate;
+        // const roomdiscount = this.room.discount;
+        // const bookingdiscount = this.discount;
 
+        // return (((roomprice * (100 - roomdiscount)) / 100) * (100 - bookingdiscount)) / 100;
+        const value = ((this.discount + this.room.discount) >= 90) ? 90 : this.discount + this.room.discount
+        return (
+            this.room.rate * (1 - (value / 100))).toFixed(2)
     }
+
 }
 
 module.exports = { Room, Booking }

@@ -1,4 +1,4 @@
-const { Room } = require('./index')
+const { Room, Booking } = require('./index')
 
 const roomData = {
     name: "Suite",
@@ -15,7 +15,7 @@ const bookingData = {
     room: {}
 
 }
-
+// Test Rooms
 describe('rooms', () => {
     test('Instanciate a room with name', () => {
         const testRoom = new Room({ name: roomData.name })
@@ -61,12 +61,118 @@ describe('occupancy', () => {
     })
 })
 describe('occupancy Percentage', () => {
-    test('percentage 100', () => {
+    test('endDate !< startDate', () => {
         const testRoom = new Room({ ...roomData, booking: [bookingData] })
-        expect(testRoom.occupancyPercentage('20230212', '20230214')).toBe(100)
+        expect(testRoom.occupancyPercentage('20230210', '20230208')).toBe("Check out cannot be greater than check in")
     })
     test('percetage 0', () => {
         const testRoom = new Room({ ...roomData, booking: [bookingData] })
         expect(testRoom.occupancyPercentage('20230201', '20230210')).toBe(0)
     })
+    test('one day in range: 25%', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230209', '20230212'))
+            .toBe(25)
+    })
+    test('one day in range: 33%', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230210', '20230212')).toBe(33)
+    })
+    test('one day in range: 50%', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230211', '20230212')).toBe(50)
+
+    })
+    test('percentage 66', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230211', '20230213')).toBe(66)
+    })
+    test('percentage 100', () => {
+        const testRoom = new Room({ ...roomData, booking: [bookingData] })
+        expect(testRoom.occupancyPercentage('20230212', '20230214')).toBe(100)
+    })
+
 })
+describe('avalaible', () => {
+    test('endDate !< startDate', () => {
+        const booking = new Booking({ ...bookingData })
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.availableRooms(rooms, "20230212", "20230210")).toBe("Check out cannot be greater than check in")
+    })
+    test('avalaible rooms', () => {
+        const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
+        const room = new Room({ ...roomData, booking: [booking2] })
+        const booking = new Booking({ ...bookingData })
+        const room2 = new Room({ ...roomData, booking: [booking] })
+        const rooms = [room, room2]
+        expect(Room.availableRooms(rooms, "20230224", "20230227")).toEqual(rooms)
+
+    })
+    test('is not avalaible rooms', () => {
+        const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
+        const room = new Room({ ...roomData, booking: [booking2] })
+        const booking = new Booking({ ...bookingData })
+        const room2 = new Room({ ...roomData, booking: [booking] })
+        const rooms = [room, room2]
+        expect(Room.availableRooms(rooms, "20230212", "20230218")).toEqual([])
+
+    })
+    test('avalaible only room', () => {
+        const booking = new Booking({ ...bookingData })
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.availableRooms(rooms, "20230210", "20230212")).toEqual([room2])
+    })
+
+})
+describe('totalOccupancyPercentage', () => {
+    test('totalpercentage must be 100', () => {
+        const booking = new Booking(bookingData)
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230212', checkout: '220230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.totalOccupancyPercentage(rooms, '20230212', '20230214')).toEqual(100)
+
+    })
+    test('totalpercentage must be 83', () => {
+        const booking = new Booking(bookingData)
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230212', checkout: '220230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.totalOccupancyPercentage(rooms, '20230213', '20230215')).toEqual(83)
+
+    })
+    test('totalpercentage must be 56', () => {
+        const booking = new Booking(bookingData)
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230212', checkout: '220230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.totalOccupancyPercentage(rooms, '20230210', '20230217')).toEqual(56)
+    })
+    test('totalpercentage must be 33', () => {
+        const booking = new Booking(bookingData)
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230212', checkout: '220230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.totalOccupancyPercentage(rooms, '20230210', '20230212')).toEqual(33)
+    })
+    test('totalpercentage must be 0', () => {
+        const booking = new Booking(bookingData)
+        const room = new Room({ ...roomData, booking: [booking] })
+        const booking2 = new Booking({ ...bookingData, checkin: '20230212', checkout: '220230218' })
+        const room2 = new Room({ ...roomData, booking: [booking2] })
+        const rooms = [room, room2]
+        expect(Room.totalOccupancyPercentage(rooms, '20230210', '20230211')).toEqual(0)
+    })
+})
+
+//Test Booking
