@@ -81,7 +81,6 @@ describe('occupancy Percentage', () => {
     test('one day in range: 50%', () => {
         const testRoom = new Room({ ...roomData, booking: [bookingData] })
         expect(testRoom.occupancyPercentage('20230211', '20230212')).toBe(50)
-
     })
     test('percentage 66', () => {
         const testRoom = new Room({ ...roomData, booking: [bookingData] })
@@ -109,7 +108,6 @@ describe('avalaible', () => {
         const room2 = new Room({ ...roomData, booking: [booking] })
         const rooms = [room, room2]
         expect(Room.availableRooms(rooms, "20230224", "20230227")).toEqual(rooms)
-
     })
     test('is not avalaible rooms', () => {
         const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
@@ -118,7 +116,6 @@ describe('avalaible', () => {
         const room2 = new Room({ ...roomData, booking: [booking] })
         const rooms = [room, room2]
         expect(Room.availableRooms(rooms, "20230212", "20230218")).toEqual([])
-
     })
     test('avalaible only room', () => {
         const booking = new Booking({ ...bookingData })
@@ -176,3 +173,26 @@ describe('totalOccupancyPercentage', () => {
 })
 
 //Test Booking
+describe('Booking', () => {
+
+    test('fee must be 10%', () => {
+        const room = new Room({ ...roomData, discount: 10 })
+        const testBooking = new Booking({ ...bookingData, room, discount: 0 })
+        room.booking.push(testBooking)
+        expect(testBooking.getFee()).toBe(1400)
+    })
+    test('fee must be 45%', () => {
+        const room = new Room({ ...roomData })
+        const testBooking = new Booking({ ...bookingData, room })
+        room.booking.push(testBooking)
+        expect(testBooking.getFee()).toBe(6300)
+    })
+    test('fee must be 50%', () => {
+        const room = new Room({ ...roomData, discount: 10 })
+        const testBooking = new Booking({ ...bookingData, room, discount: 40 })
+        room.booking.push(testBooking)
+        expect(testBooking.getFee()).toBe(7000)
+    })
+
+
+})

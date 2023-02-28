@@ -68,15 +68,12 @@ class Booking {
         this.discount = discount;
         this.room = room
     }
-    get fee() {
-        // const roomprice = this.room.rate;
-        // const roomdiscount = this.room.discount;
-        // const bookingdiscount = this.discount;
+    getFee() {
+        // el descuento nunca puede ser del 100%
+        const totalValue = ((this.discount + this.room.discount) >= 90) ? 90 : this.discount + this.room.discount
 
-        // return (((roomprice * (100 - roomdiscount)) / 100) * (100 - bookingdiscount)) / 100;
-        const value = ((this.discount + this.room.discount) >= 90) ? 90 : this.discount + this.room.discount
         return (
-            this.room.rate * (1 - (value / 100))).toFixed(2)
+            Math.floor(this.room.rate * (totalValue / 100)))
     }
 
 }
