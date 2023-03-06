@@ -61,10 +61,10 @@ describe('occupancy', () => {
     })
 })
 describe('occupancy Percentage', () => {
-    test('endDate !< startDate', () => {
-        const testRoom = new Room({ ...roomData, booking: [bookingData] })
-        expect(testRoom.occupancyPercentage('20230210', '20230208')).toBe("Check out cannot be greater than check in")
-    })
+    // test('endDate !< startDate', () => {
+    //     const testRoom = new Room({ ...roomData, booking: [bookingData] })
+    //     expect(testRoom.occupancyPercentage('20230210', '20230208')).toBe("Check out cannot be greater than check in")
+    // })
     test('percetage 0', () => {
         const testRoom = new Room({ ...roomData, booking: [bookingData] })
         expect(testRoom.occupancyPercentage('20230201', '20230210')).toBe(0)
@@ -93,14 +93,14 @@ describe('occupancy Percentage', () => {
 
 })
 describe('avalaible', () => {
-    test('endDate !< startDate', () => {
-        const booking = new Booking({ ...bookingData })
-        const room = new Room({ ...roomData, booking: [booking] })
-        const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
-        const room2 = new Room({ ...roomData, booking: [booking2] })
-        const rooms = [room, room2]
-        expect(Room.availableRooms(rooms, "20230212", "20230210")).toBe("Check out cannot be greater than check in")
-    })
+    // test('endDate !< startDate', () => {
+    //     const booking = new Booking({ ...bookingData })
+    //     const room = new Room({ ...roomData, booking: [booking] })
+    //     const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
+    //     const room2 = new Room({ ...roomData, booking: [booking2] })
+    //     const rooms = [room, room2]
+    //     expect(Room.availableRooms(rooms, "20230212", "20230210")).toBe("Check out cannot be greater than check in")
+    // })
     test('avalaible rooms', () => {
         const booking2 = new Booking({ ...bookingData, checkin: '20230214', checkout: '20230218' })
         const room = new Room({ ...roomData, booking: [booking2] })

@@ -1,12 +1,31 @@
-class Room {
-    constructor({ name, booking, rate, discount }) {
-        this.name = name;
-        this.booking = booking;
-        this.rate = rate;
-        this.discount = discount;
+interface RoomInter {
+    name: string;
+    booking: Booking[];
+    rate: number;
+    discount: number
+}
+interface BookingInter {
+    name: string;
+    email: string;
+    checkin: number;
+    checkout: number;
+    discount: number;
+    room: Room
+}
+
+class Room implements RoomInter {
+        name: string;
+        booking: Booking[];
+        rate: number;
+        discount: number
+        constructor(room: RoomInter) {
+        this.name = room.name;
+        this.booking = room.booking;
+        this.rate = room.rate;
+        this.discount = room.discount;
     }
 
-    isOccupied(date) {
+    isOccupied(date: number) {
         for(let i = 0; i <= this.booking.length; i++) {
             if (
                 date >= this.booking[i].checkin &&
@@ -18,12 +37,12 @@ class Room {
         }
     }
 
-    occupancyPercentage(startDate, endDate) {
-        if (endDate < startDate) return "Check out cannot be greater than check in"
+    occupancyPercentage(startDate: number, endDate:number) {
+        // if (endDate < startDate) return "Check out cannot be greater than check in"
         let count = 0;
-        let numberStartDate = +startDate
-        let numberEndDate = +endDate
-        const range = []
+        let numberStartDate: number = Number(startDate)
+        let numberEndDate : number = Number(endDate)
+        const range: number[] = []
         while (numberStartDate <= numberEndDate) {
             range.push(numberStartDate)
             numberStartDate++
@@ -36,8 +55,8 @@ class Room {
         return Math.floor((count * 100) / range.length);
     }
 
-    static totalOccupancyPercentage(rooms, startDate, endDate) {
-        let totalOccupancy = 0
+    static totalOccupancyPercentage(rooms: Room[], startDate: number, endDate: number) {
+        let totalOccupancy: number = 0
         rooms.forEach(room => {
             totalOccupancy += room.occupancyPercentage(startDate, endDate)
         })
@@ -45,28 +64,34 @@ class Room {
         return totalPercentage
     }
 
-    static availableRooms(rooms, startDate, endDate) {
-        if (endDate < startDate) return "Check out cannot be greater than check in"
-        const availablerooms = [];
+    static availableRooms(rooms: Room[], startDate: number, endDate: number) {
+        // if (endDate < startDate) return "Check out cannot be greater than check in"
+        const availablerooms: Room[]= [];
         rooms.forEach((room) => {
             if (room.occupancyPercentage(startDate, endDate) === 0) {
                 availablerooms.push(room);
             }
         });
-        return availablerooms;
+        return availablerooms || [];
     }
 
 }
 
 
-class Booking {
-    constructor({ name, email, checkin, checkout, discount, room }) {
-        this.name = name;
-        this.email = email;
-        this.checkin = checkin;
-        this.checkout = checkout;
-        this.discount = discount;
-        this.room = room
+class Booking implements BookingInter{
+    name: string;
+    email: string;
+    checkin: number;
+    checkout: number;
+    discount: number;
+    room: Room
+    constructor(booking: BookingInter) {
+        this.name = booking.name;
+        this.email = booking.email;
+        this.checkin = booking.checkin;
+        this.checkout = booking.checkout;
+        this.discount = booking.discount;
+        this.room = booking.room
     }
     getFee() {
         // el descuento nunca puede ser del 100%
@@ -78,4 +103,4 @@ class Booking {
 
 }
 
-module.exports = { Room, Booking }
+export  { Room, Booking }
