@@ -24,7 +24,6 @@ class Room implements RoomInter {
         this.rate = room.rate;
         this.discount = room.discount;
     }
-
     isOccupied(date: number) {
         for(let i = 0; i <= this.booking.length; i++) {
             if (
@@ -36,9 +35,8 @@ class Room implements RoomInter {
             return false
         }
     }
-
-    occupancyPercentage(startDate: number, endDate:number) {
-        // if (endDate < startDate) return "Check out cannot be greater than check in"
+    occupancyPercentage(startDate: number, endDate: number) : string | number {
+        if (endDate < startDate) return "Check out cannot be greater than check in"
         let count = 0;
         let numberStartDate: number = Number(startDate)
         let numberEndDate : number = Number(endDate)
@@ -54,16 +52,15 @@ class Room implements RoomInter {
         }
         return Math.floor((count * 100) / range.length);
     }
-
     static totalOccupancyPercentage(rooms: Room[], startDate: number, endDate: number) {
         let totalOccupancy: number = 0
         rooms.forEach(room => {
-            totalOccupancy += room.occupancyPercentage(startDate, endDate)
+            const result = room.occupancyPercentage(startDate, endDate);
+            typeof result === 'number' ? totalOccupancy += result : totalOccupancy = 0
         })
         const totalPercentage = !isNaN(totalOccupancy) ? totalOccupancy / rooms.length : totalOccupancy
         return totalPercentage
     }
-
     static availableRooms(rooms: Room[], startDate: number, endDate: number) {
         // if (endDate < startDate) return "Check out cannot be greater than check in"
         const availablerooms: Room[]= [];
@@ -96,7 +93,6 @@ class Booking implements BookingInter{
     getFee() {
         // el descuento nunca puede ser del 100%
         const totalValue = ((this.discount + this.room.discount) >= 90) ? 90 : this.discount + this.room.discount
-
         return (
             Math.floor(this.room.rate * (totalValue / 100)))
     }
