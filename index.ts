@@ -7,7 +7,7 @@ class Room {
     }
 
     isOccupied(date) {
-        for (let i = 0; i <= this.booking.length; i++) {
+        for(let i = 0; i <= this.booking.length; i++) {
             if (
                 date >= this.booking[i].checkin &&
                 date <= this.booking[i].checkout
