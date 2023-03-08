@@ -1,10 +1,12 @@
 # Testing-Jest
 
 ![Test](./imgReadme/testing.png)
+![TestTypeScript](./imgReadme/testTS.png)
 
 ## Description
 
 Definition of classes for testing:
+Made in javascript and migrated to typescript
 
 ### Room
 
@@ -49,3 +51,4 @@ Methods:
 
 ![Jest](https://img.shields.io/badge/Jest-323330?style=for-the-badge&logo=Jest&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
