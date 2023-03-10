@@ -24,16 +24,16 @@ class Room implements RoomInter {
         this.rate = room.rate;
         this.discount = room.discount;
     }
-    isOccupied(date: number) {
+    isOccupied(date: number): boolean {
         for(let i = 0; i <= this.booking.length; i++) {
             if (
                 date >= this.booking[i].checkin &&
                 date <= this.booking[i].checkout
             ) {
                 return true
-            }
-            return false
+            }   
         }
+        return false
     }
     occupancyPercentage(startDate: number, endDate: number) : string | number {
         if (endDate < startDate) return "Check out cannot be greater than check in"
@@ -52,7 +52,7 @@ class Room implements RoomInter {
         }
         return Math.floor((count * 100) / range.length);
     }
-    static totalOccupancyPercentage(rooms: Room[], startDate: number, endDate: number) {
+    static totalOccupancyPercentage(rooms: Room[], startDate: number, endDate: number): number {
         let totalOccupancy: number = 0
         rooms.forEach(room => {
             const result = room.occupancyPercentage(startDate, endDate);
@@ -61,7 +61,7 @@ class Room implements RoomInter {
         const totalPercentage = !isNaN(totalOccupancy) ? totalOccupancy / rooms.length : totalOccupancy
         return totalPercentage
     }
-    static availableRooms(rooms: Room[], startDate: number, endDate: number) {
+    static availableRooms(rooms: Room[], startDate: number, endDate: number): Room[] {
         // if (endDate < startDate) return "Check out cannot be greater than check in"
         const availablerooms: Room[]= [];
         rooms.forEach((room) => {
@@ -90,7 +90,7 @@ class Booking implements BookingInter{
         this.discount = booking.discount;
         this.room = booking.room
     }
-    getFee() {
+    getFee() : number{
         // el descuento nunca puede ser del 100%
         const totalValue = ((this.discount + this.room.discount) >= 90) ? 90 : this.discount + this.room.discount
         return (
